@@ -1,5 +1,59 @@
 const tabla = document.querySelector("#tablero")
 const botones = tabla.querySelectorAll("button")
+const play = document.querySelector("#play")
+
+function shuffle(array) {
+	let currentIndex = array.length
+	let randomIndex
+	// While there remain elements to shuffle.
+	while (currentIndex != 0) {
+		// Pick a remaining element.
+		randomIndex = Math.floor(Math.random() * currentIndex)
+		currentIndex--
+
+		// And swap it with the current element.
+		;[array[currentIndex], array[randomIndex]] = [
+			array[randomIndex],
+			array[currentIndex],
+		]
+	}
+
+	return array
+}
+
+const ganador = () => {
+	terminado = Array.from(botones)
+		.map((x) => Number(x.textContent.trim()))
+		.filter((x, i) => x === i + 1)
+
+	console.log(terminado)
+	resultado = terminado.length === 16 ? true : false
+	resultado ? console.log("GANADOR") : ""
+}
+
+play.addEventListener("click", () => {
+	botones[botones.length - 1].style.visibility = "visible"
+
+	let orden = shuffle(
+		Array(16)
+			.fill(0)
+			.map((x, i) => i)
+	)
+
+	Array.from(botones).forEach((x, i) => {
+		x.style.visibility = "visible"
+		x.value = orden[i]
+		x.textContent = Number(x.value) + 1
+		if (orden[i] === 15) {
+			x.style.visibility = "hidden"
+		}
+	})
+	ajustar()
+
+	if (play.textContent !== "Restart") {
+		play.textContent = "Restart"
+	}
+})
 
 const encontrar = (valor) => {
 	// Retorna la posicion en el arreglo del elemento vacio
@@ -15,8 +69,6 @@ const encontrar = (valor) => {
 const orientacion = (boton) => {
 	const vacio = botones[encontrar(16)]
 
-	console.log("es vacio", vacio)
-	console.log("boton valor", boton.value, " vacio valor", vacio.value)
 	if (Number(boton.value) % 4 === Number(vacio.value) % 4) {
 		return 2
 	} else if (
@@ -41,15 +93,7 @@ const distancia = (boton, orientacion) => {
 const rango = (boton, orientacion, distancia) => {
 	let casillas = [boton]
 	const adelante = distancia > 0
-	console.log(
-		boton,
-		"orientacion ",
-		orientacion,
-		"distancia ",
-		distancia,
-		"adelante ",
-		adelante
-	)
+
 	for (let i = 1; i <= Math.abs(distancia); i++) {
 		if (orientacion === 1) {
 			adelante
@@ -59,12 +103,6 @@ const rango = (boton, orientacion, distancia) => {
 				: casillas.push(
 						botones[encontrar(Number(boton.textContent.trim())) - i]
 				  )
-			console.log(
-				encontrar(Number(boton.textContent.trim())) + i,
-				"a veeeeer",
-				"distancia: ",
-				distancia
-			)
 		} else if (orientacion === 2) {
 			adelante
 				? casillas.push(
@@ -82,14 +120,12 @@ const rango = (boton, orientacion, distancia) => {
 const mover = (lista) => {
 	let cambio = lista
 
-	console.log(cambio)
 	cambio[cambio.length - 1].style.visibility = "visible"
 	for (let i = cambio.length - 1; i > 0; i--) {
 		let auxiliar = String(cambio[i].value)
 		let auxiliar2 = cambio[i].textContent.trim()
 		cambio[i].value = String(cambio[i - 1].value)
 		cambio[i].textContent = String(Number(cambio[i - 1].textContent.trim()))
-		console.log("cambio el valor? ", cambio[i].value, "ademaaaas", cambio[i])
 		cambio[i - 1].value = auxiliar
 		cambio[i - 1].textContent = String(Number(auxiliar2))
 	}
@@ -108,13 +144,12 @@ Array.from(botones).map((x, i) => {
 	x.addEventListener("click", () => {
 		const orient = orientacion(x)
 
-		console.log("boton,", x.value)
 		if (orient != 3) {
-			console.log(orient)
 			const dist = distancia(x, orient)
-			console.log(dist)
 			const casillas = rango(x, orient, dist)
 			mover(casillas)
 		}
+
+		ganador()
 	})
 })
