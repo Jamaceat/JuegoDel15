@@ -2,23 +2,39 @@ const tabla = document.querySelector("#tablero")
 const botones = tabla.querySelectorAll("button")
 const play = document.querySelector("#play")
 
-function shuffle(array) {
-	let currentIndex = array.length
-	let randomIndex
-	// While there remain elements to shuffle.
-	while (currentIndex != 0) {
-		// Pick a remaining element.
-		randomIndex = Math.floor(Math.random() * currentIndex)
-		currentIndex--
+// function shuffle(array) {
+// 	let currentIndex = array.length
+// 	let randomIndex
+// 	// While there remain elements to shuffle.
+// 	while (currentIndex != 0) {
+// 		// Pick a remaining element.
+// 		randomIndex = Math.floor(Math.random() * currentIndex)
+// 		currentIndex--
 
-		// And swap it with the current element.
-		;[array[currentIndex], array[randomIndex]] = [
-			array[randomIndex],
-			array[currentIndex],
-		]
+// 		// And swap it with the current element.
+// 		;[array[currentIndex], array[randomIndex]] = [
+// 			array[randomIndex],
+// 			array[currentIndex],
+// 		]
+// 	}
+
+// 	return array
+// }
+
+const revolver = (pasos) => {
+	let i = 0
+
+	while (i < pasos) {
+		x = Array.from(botones)[Math.floor(Math.random() * 16)]
+		const orient = orientacion(x)
+
+		if (orient != 3) {
+			const dist = distancia(x, orient)
+			const casillas = rango(x, orient, dist)
+			mover(casillas)
+			i++
+		}
 	}
-
-	return array
 }
 
 const ganador = () => {
@@ -34,21 +50,7 @@ const ganador = () => {
 play.addEventListener("click", () => {
 	botones[botones.length - 1].style.visibility = "visible"
 
-	let orden = shuffle(
-		Array(16)
-			.fill(0)
-			.map((x, i) => i)
-	)
-
-	Array.from(botones).forEach((x, i) => {
-		x.style.visibility = "visible"
-		x.value = orden[i]
-		x.textContent = Number(x.value) + 1
-		if (orden[i] === 15) {
-			x.style.visibility = "hidden"
-		}
-	})
-	ajustar()
+	revolver(1000)
 
 	if (play.textContent !== "Restart") {
 		play.textContent = "Restart"
