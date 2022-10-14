@@ -1,7 +1,11 @@
 const tabla = document.querySelector("#tablero")
 const botones = tabla.querySelectorAll("button")
 const play = document.querySelector("#play")
-
+const forma = document.querySelector("#formulario")
+const nPasosListo = document.querySelector("#preparado")
+const npasos = document.querySelector("#npasos")
+const winner = document.querySelector("#Ganador")
+let jugando = false
 // function shuffle(array) {
 // 	let currentIndex = array.length
 // 	let randomIndex
@@ -21,9 +25,20 @@ const play = document.querySelector("#play")
 // 	return array
 // }
 
+// nPasosListo.addEventListener("click", (e) => {
+
+// })
+nPasosListo.addEventListener("click", (e) => {
+	if (Number(npasos.value) > 0 && Number(npasos.value) <= 1000) {
+		revolver(Number(npasos.value))
+		forma.style.display = "none"
+		jugando = true
+		activar()
+	}
+})
 const revolver = (pasos) => {
 	let i = 0
-
+	botones[botones.length - 1].style.visibility = "visible"
 	while (i < pasos) {
 		x = Array.from(botones)[Math.floor(Math.random() * 16)]
 		const orient = orientacion(x)
@@ -37,21 +52,36 @@ const revolver = (pasos) => {
 	}
 }
 
+const desactivar = () => {
+	Array.from(botones).forEach((x) => (x.disabled = true))
+}
+const activar = () => {
+	Array.from(botones).forEach((x) => (x.disabled = false))
+}
+
 const ganador = () => {
 	terminado = Array.from(botones)
 		.map((x) => Number(x.textContent.trim()))
 		.filter((x, i) => x === i + 1)
 
 	console.log(terminado)
-	resultado = terminado.length === 16 ? true : false
-	resultado ? console.log("GANADOR") : ""
+	// resultado = terminado.length === 16 ? true : false
+
+	jugando
+		? (resultado = terminado.length === 16 ? true : false)
+		: (resultado = false)
+	if (resultado) {
+		winner.style.display = "flex"
+		desactivar()
+		jugando = false
+	}
 }
 
 play.addEventListener("click", () => {
-	botones[botones.length - 1].style.visibility = "visible"
+	// botones[botones.length - 1].style.visibility = "visible"
 
-	revolver(1000)
-
+	forma.style.display = "flex"
+	winner.style.display = "none"
 	if (play.textContent !== "Restart") {
 		play.textContent = "Restart"
 	}
@@ -155,3 +185,5 @@ Array.from(botones).map((x, i) => {
 		ganador()
 	})
 })
+
+desactivar()

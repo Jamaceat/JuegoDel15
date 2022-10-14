@@ -13,12 +13,43 @@
 		<title>Juego del 15</title>
 	</head>
 	<body class="">
-		<h1 class="text-3xl text-center mb-8">Juego del 15</h1>
+		<h1 class="text-3xl text-center mb-8 mt-10 bg-teal-500 p-10">
+			Juego del 15
+		</h1>
 		<div class="flex w-full justify-center">
 			<button id="play" class="px-3 bg-emerald-300 rounded m-3">Start</button
 			><button class="px-3 bg-emerald-300 rounded m-3 hidden">Restart</button>
 		</div>
-		<div class="flex w-full justify-center">
+		<form
+			id="formulario"
+			onsubmit="return false"
+			method="post"
+			class="flex justify-center my-4 bg-lime-700 p-3 hidden"
+		>
+			<input
+				id="npasos"
+				type="number"
+				min="1"
+				max="1000"
+				placeholder="RandomSteps"
+				required
+			/>
+			<input
+				type="submit"
+				id="preparado"
+				class="p-2 ml-8 bg-lime-500 rounded hover:bg-green-600"
+				value="Comenzar"
+			/>
+		</form>
+
+		<div
+			id="Ganador"
+			class="flex justify-center w-full p-10 bg-emerald-300 rounded my-5 hidden"
+		>
+			<p class="text-7xl text-center">FELICIDADES GANADOR!!🎊🎊🥳</p>
+		</div>
+
+		<div class="flex w-full justify-center mb-10">
 			<div
 				id="tablero"
 				class="flex flex-wrap bg-red-300 w-1/2 justify-center align-center rounded shadow h-fit"
